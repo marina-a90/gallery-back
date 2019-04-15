@@ -10,4 +10,9 @@ class Image extends Model
         'image_URL', 
         'gallery_id'
     ];
+
+    public function gallery() {
+        return $this->belongsTo(Gallery::class);
+    }
+    
 }
