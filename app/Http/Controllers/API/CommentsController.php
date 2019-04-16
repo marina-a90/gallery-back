@@ -5,15 +5,8 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Gallery;
-
-class GalleriesController extends Controller
+class CommentsController extends Controller
 {
-    public function __construct() 
-    {
-        $this->middleware('auth')->except('index');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +14,7 @@ class GalleriesController extends Controller
      */
     public function index()
     {
-        return Gallery::all();
+        //
     }
 
     /**
@@ -32,11 +25,7 @@ class GalleriesController extends Controller
      */
     public function store(Request $request)
     {
-        Gallery::create($request->validate([
-            'title' => 'required|min:2|max:255',
-            'description' => 'required|max:1000',
-            'user_id' => 'required'
-        ]));
+        //
     }
 
     /**
@@ -47,7 +36,7 @@ class GalleriesController extends Controller
      */
     public function show($id)
     {
-        return Gallery::findOrFail($id);
+        //
     }
 
     /**
@@ -57,14 +46,9 @@ class GalleriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Gallery $gallery)
+    public function update(Request $request, $id)
     {
-        $gallery->update($request->validate([
-            'title' => 'required|min:2|max:255',
-            'description' => 'required|max:1000',
-            'user_id' => 'required'
-        ]));
-        return $gallery;
+        //
     }
 
     /**
@@ -75,6 +59,6 @@ class GalleriesController extends Controller
      */
     public function destroy($id)
     {
-        return Gallery::destroy($id);
+        //
     }
 }
