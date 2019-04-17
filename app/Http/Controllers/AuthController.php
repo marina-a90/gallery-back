@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\User;
 
 class AuthController extends Controller
 {
@@ -14,7 +16,35 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
+
+    public function register(Request $request) 
+    {
+        // pokusaj validacije
+        // $this->validate($request, [
+        //     'first_name' => 'required|string',
+        //     'last_name' => 'required|string',
+        //     'email' => 'required|email|unique:users,email',
+        //     'password' => 'required|string|min:8|confirmed|regex:/.*[0-9].*/',
+        //     'accepted_terms' => 'required'
+        // ]);
+        // $data = $request->only([
+        //     'first_name', 'last_name', 'email', 'accepted_terms'
+        // ]);
+        // $data['password'] = bcrypt($data['password']);
+        // $user = User::create($data);
+
+        // radi
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'accepted_terms' => true,
+        ]);
+         
+        return $this->login($user->email, $user->password);
     }
 
     /**
