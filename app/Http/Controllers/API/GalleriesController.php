@@ -11,7 +11,7 @@ class GalleriesController extends Controller
 {
     public function __construct() 
     {
-        $this->middleware('auth')->except('index');
+        // $this->middleware('auth')->except('index');
     }
 
     /**
@@ -21,7 +21,7 @@ class GalleriesController extends Controller
      */
     public function index()
     {
-        return Gallery::all();
+        return Gallery::with('comments', 'images', 'user')->get();
     }
 
     /**
@@ -47,7 +47,8 @@ class GalleriesController extends Controller
      */
     public function show($id)
     {
-        return Gallery::findOrFail($id);
+        $gallery = Gallery::with('images', 'comments', 'user')->findOrFail($id);
+        return $gallery;
     }
 
     /**
