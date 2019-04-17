@@ -22,18 +22,18 @@ class AuthController extends Controller
     public function register(Request $request) 
     {
         // pokusaj validacije
-        // $this->validate($request, [
-        //     'first_name' => 'required|string',
-        //     'last_name' => 'required|string',
-        //     'email' => 'required|email|unique:users,email',
-        //     'password' => 'required|string|min:8|confirmed|regex:/.*[0-9].*/',
-        //     'accepted_terms' => 'required'
-        // ]);
-        // $data = $request->only([
-        //     'first_name', 'last_name', 'email', 'accepted_terms'
-        // ]);
-        // $data['password'] = bcrypt($data['password']);
-        // $user = User::create($data);
+        $this->validate($request, [
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed|regex:/.*[0-9].*/',
+            'accepted_terms' => 'required'
+        ]);
+        $data = $request->only([
+            'first_name', 'last_name', 'email', 'accepted_terms'
+        ]);
+        $data['password'] = bcrypt($data['password']);
+        $user = User::create($data);
 
         // radi
         $user = User::create([
