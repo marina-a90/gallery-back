@@ -20,8 +20,8 @@ class MyGalleriesController extends Controller
      */
     public function index(Request $request)
     {
-        $user = auth()->user();
-        return Gallery::getFilteredGalleries($request, $user->id);
+        $user = auth()->user()->id;
+        return Gallery::getFilteredGalleries($request, $user);
     }
 
     /**

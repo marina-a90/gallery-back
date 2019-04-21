@@ -32,18 +32,18 @@ class Gallery extends Model
         $query->with('user', 'images');
 
         if($user_id) {
-            $query->where('user_id', '=', $user_id);
+            $query->where('user_id', "=", $user_id);
         }
 
         if($term){
-            $query->whereHas('user_id', function($query) use ($term) {
+            $query->whereHas('user', function($query) use ($term) {
                 $query->where('title', 'like', '%'.$term.'%')
                         ->orWhere('description', 'like', '%'.$term.'%')
                             ->orWhere('first_name', 'like', '%'.$term.'%')
                                 ->orWhere('last_name', 'like', '%'.$term.'%');
-            }); 
+        });
         }
-       
+
         return response()->json([ 'galleries' =>  $query->latest()->paginate(10) ]);
     }
 
