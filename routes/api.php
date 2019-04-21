@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('galleries', 'API\GalleriesController')
 // ->middleware('auth:api')
 ;
+Route::resource('comments', 'API\CommentController');
+Route::resource('my-galleries', 'API\MyGalleriesController');
+Route::resource('user-galleries/{id}', 'API\UserController');
 
 Route::group([
     'middleware' => 'api',

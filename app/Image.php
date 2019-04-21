@@ -12,7 +12,17 @@ class Image extends Model
     ];
 
     public function gallery() {
-        return $this->belongsTo(Gallery::class, 'gallery_id');
+        return $this->belongsTo(Gallery::class);
+    }
+
+    public static function makeImages($images, $id) {
+        foreach($images as $imgage) {
+            self::create([
+                'imageURL' => $image,
+                'gallery_id' => $id
+            ]);
+        }
+        return;
     }
     
 }

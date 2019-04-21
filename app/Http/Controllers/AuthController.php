@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\RegisterRequest;
 use App\User;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class AuthController extends Controller
 {
@@ -19,32 +23,18 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    public function register(Request $request) 
+    public function register(RegisterRequest $request) 
     {
-        // pokusaj validacije
-        $this->validate($request, [
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed|regex:/.*[0-9].*/',
-            'accepted_terms' => 'required'
-        ]);
         $data = $request->only([
-            'first_name', 'last_name', 'email', 'accepted_terms'
+            'first_name', 'last_name', 'email', 'accepted_terms', 'password'
         ]);
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
 
-        // radi
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'accepted_terms' => true,
-        ]);
-         
-        return $this->login($user->email, $user->password);
+        // $this->login($user->email, $user->password);
+
+        $token = JWTAuth::fromUser($user);
+        return response()->json(compact('user', 'token'), 201);
     }
 
     /**
@@ -56,7 +46,9 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        $token = auth()->attempt($credentials);
+
+        if (!$token) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -107,7 +99,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'user' => auth()->user() // dodato za user id
         ]);
     }
 }

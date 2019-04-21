@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\API;
 
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CommentRequest;
-use App\Comment;
+use App\Gallery;
 
-class CommentsController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $id)
     {
-        //
+        // $id = request()->route('id');
+        return Gallery::getFilteredGalleries($request, $id);
     }
 
     /**
@@ -25,9 +25,9 @@ class CommentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CommentsRequest $request)
+    public function store(Request $request)
     {
-        return Comment::makeComment($request);
+        //
     }
 
     /**
@@ -61,6 +61,6 @@ class CommentsController extends Controller
      */
     public function destroy($id)
     {
-        return Comment::destroy($id);
+        //
     }
 }

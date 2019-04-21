@@ -4,14 +4,15 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\GalleryRequest;
 use App\Gallery;
+use App\Image;
 
 class GalleriesController extends Controller
 {
     public function __construct() 
     {
-        // $this->middleware('auth')->except('index');
+        // $this->middleware('auth:api', ['except' => ['index', 'show']]);
     }
 
     /**
@@ -19,9 +20,9 @@ class GalleriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Gallery::with('comments', 'images', 'user')->get();
+        return Gallery::getFilteredGalleries($request);
     }
 
     /**
@@ -30,13 +31,17 @@ class GalleriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GalleryRequest $request)
     {
-        Gallery::create($request->validate([
-            'title' => 'required|min:2|max:255',
-            'description' => 'required|max:1000',
-            'user_id' => 'required'
-        ]));
+        // Gallery::create($request->validate([
+        //     'title' => 'required|min:2|max:255',
+        //     'description' => 'required|max:1000',
+        //     'user_id' => 'required'
+        // ]));
+
+        $gallery = Gallery::makeGallery($request);
+        Image::makeImages($request->images, $gallery->id);
+        return $gallery;
     }
 
     /**
@@ -47,8 +52,10 @@ class GalleriesController extends Controller
      */
     public function show($id)
     {
-        $gallery = Gallery::with('images', 'comments', 'user')->findOrFail($id);
-        return $gallery;
+        // $gallery = Gallery::with('images', 'comments', 'user')->findOrFail($id);
+        // return $gallery;
+
+        return Gallery::getSingleGallery($id);
     }
 
     /**
@@ -58,14 +65,29 @@ class GalleriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Gallery $gallery)
+    public function update(GalleryRequest $request, Gallery $gallery)
     {
-        $gallery->update($request->validate([
-            'title' => 'required|min:2|max:255',
-            'description' => 'required|max:1000',
-            'user_id' => 'required'
-        ]));
-        return $gallery;
+        $gallery->title = $request->title;
+        $gallery->description = $request->description;
+        $gallery->user_id = auth()->user()->id;
+        $gallery->save(); 
+
+        $gallery->images()->delete();
+        $imagesgs = [];
+        foreach($request->images as $image) {
+            // $images[] = new Image($image);
+            Image::makeImages($image, $gallery->id);
+        }
+        $gallery->images()->saveMany($images);
+        return $this->show($gallery->id);
+
+
+        // $gallery->update($request->validate([
+        //     'title' => 'required|min:2|max:255',
+        //     'description' => 'required|max:1000',
+        //     'user_id' => 'required'
+        // ]));
+        // return $gallery;
     }
 
     /**

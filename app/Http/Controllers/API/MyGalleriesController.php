@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers\API;
 
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CommentRequest;
-use App\Comment;
+use App\Gallery;
+use App\User;
 
-class CommentsController extends Controller
+class MyGalleriesController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = auth()->user();
+        return Gallery::getFilteredGalleries($request, $user->id);
     }
 
     /**
@@ -25,9 +30,9 @@ class CommentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CommentsRequest $request)
+    public function store(Request $request)
     {
-        return Comment::makeComment($request);
+        //
     }
 
     /**
@@ -61,6 +66,6 @@ class CommentsController extends Controller
      */
     public function destroy($id)
     {
-        return Comment::destroy($id);
+        //
     }
 }
