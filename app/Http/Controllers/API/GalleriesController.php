@@ -67,21 +67,10 @@ class GalleriesController extends Controller
         $gallery->save(); 
 
         $gallery->images()->delete();
-        $imagesgs = [];
-        foreach($request->images as $image) {
-            // $images[] = new Image($image);
-            Image::makeImages($image, $gallery->id);
-        }
-        $gallery->images()->saveMany($images);
-        return $this->show($gallery->id);
-
-
-        // $gallery->update($request->validate([
-        //     'title' => 'required|min:2|max:255',
-        //     'description' => 'required|max:1000',
-        //     'user_id' => 'required'
-        // ]));
-        // return $gallery;
+        $images = [];
+        Image::makeImages($request->images, $gallery->id);
+        // $gallery->images()->saveMany($images);
+        return $gallery;
     }
 
     /**

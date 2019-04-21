@@ -26,8 +26,8 @@ class GalleryRequest extends FormRequest
         return [
             'title'=>"required|min:2|max:255",
             'description'=> "max:1000",
-            "images" => "array|min:1|required",
-            "images.*" => ['regex:/^(http)?s?:?(\/\/[^\']*\.(?:png|jpg|jpeg))/'],
+            // "images" => "array|min:1|required",
+            // "images.*" => ['regex:/^(http)?s?:?(\/\/[^\']*\.(?:png|jpg|jpeg))/'],
             'user_id' => 'required'
         ];
     }
