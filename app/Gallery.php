@@ -11,7 +11,7 @@ class Gallery extends Model
     protected $fillable = [
         'title', 
         'description', 
-        'user_id'
+        'user_id', 
     ];
 
     public function images() {
@@ -41,7 +41,7 @@ class Gallery extends Model
                         ->orWhere('description', 'like', '%'.$term.'%')
                             ->orWhere('first_name', 'like', '%'.$term.'%')
                                 ->orWhere('last_name', 'like', '%'.$term.'%');
-        });
+            });
         }
 
         return response()->json([ 'galleries' =>  $query->latest()->paginate(10) ]);
@@ -49,12 +49,18 @@ class Gallery extends Model
 
     public static function makeGallery(GalleryRequest $request) 
     {
-        return self::create([
+        $data = [ 
             'title' => $request['title'],
-            'description' => $request['description'],
-            'user_id' => $user = auth()->user()->id
-        ]);
-        
+            'description' => '',
+            'user_id' => auth()->user()->id
+        ];
+
+        if (!empty($request['description'])) {
+            $data['description'] = $request['description'];
+        }
+
+        return self::create($data);
+
     }
 
     public static function getSingleGallery($id) {

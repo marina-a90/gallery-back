@@ -33,12 +33,6 @@ class GalleriesController extends Controller
      */
     public function store(GalleryRequest $request)
     {
-        // Gallery::create($request->validate([
-        //     'title' => 'required|min:2|max:255',
-        //     'description' => 'required|max:1000',
-        //     'user_id' => 'required'
-        // ]));
-
         $gallery = Gallery::makeGallery($request);
         Image::makeImages($request->images, $gallery->id);
         return $gallery;

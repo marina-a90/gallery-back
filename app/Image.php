@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Requests\ImageRequest;
 
 class Image extends Model
 {
@@ -16,7 +17,7 @@ class Image extends Model
     }
 
     public static function makeImages($images, $id) {
-        foreach($images as $imgage) {
+        foreach($images as $image) {
             self::create([
                 'imageURL' => $image,
                 'gallery_id' => $id
