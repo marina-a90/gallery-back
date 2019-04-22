@@ -46,8 +46,6 @@ class GalleriesController extends Controller
      */
     public function show($id)
     {
-        // $gallery = Gallery::with('images', 'comments', 'user')->findOrFail($id);
-        // return $gallery;
 
         return Gallery::getSingleGallery($id);
     }
@@ -69,7 +67,7 @@ class GalleriesController extends Controller
         $gallery->images()->delete();
         $images = [];
         Image::makeImages($request->images, $gallery->id);
-        // $gallery->images()->saveMany($images);
+        
         return $gallery;
     }
 

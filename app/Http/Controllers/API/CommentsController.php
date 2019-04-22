@@ -30,20 +30,18 @@ class CommentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(CommentRequest $request)
     public function store(Request $request)
     {
         $this->validate($request,
         [
             'description' => 'required|max:1000',
             'user_id' => 'required', 
-            'gallery_id' => 'required'
+            // 'gallery_id' => 'required'
         ]);
 
-        $comment = Comment::create($request->all());        
-        return Comment::with('user')->findOrFail($comment->id);
+        $comment = Comment::create($request->all());   
 
-        // return Comment::makeComment($request);
+        return Comment::with('user')->findOrFail($comment->id);
     }
 
     /**
