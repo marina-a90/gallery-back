@@ -31,8 +31,6 @@ class AuthController extends Controller
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
 
-        // $this->login($user->email, $user->password);
-
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);
     }

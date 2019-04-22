@@ -25,10 +25,11 @@ class Comment extends Model
         $comment = self::create([
             "description" => $request['description'],
             "gallery_id" => $request['gallery_id'],
-            'user_id' => $user = auth()->user()->id,
+            'user_id' => auth()->user()->id,
         ]);
 
-        return self::with('user')->where('id', $comment->id)->get();
+        return $comment;
+        // return self::with('user')->where('id', $comment->id)->get();
     }
 
 }
