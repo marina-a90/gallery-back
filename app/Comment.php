@@ -28,8 +28,8 @@ class Comment extends Model
             'user_id' => auth()->user()->id,
         ]);
 
-        return $comment;
-        // return self::with('user')->where('id', $comment->id)->get();
+        // return $comment;
+        return self::with('user')->where('id', $comment->id)->get();
     }
 
 }

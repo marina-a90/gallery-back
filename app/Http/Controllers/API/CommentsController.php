@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Comment;
@@ -30,9 +30,20 @@ class CommentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CommentRequest $request)
+    // public function store(CommentRequest $request)
+    public function store(Request $request)
     {
-        return Comment::makeComment($request);
+        $this->validate($request,
+        [
+            'description' => 'required|max:1000',
+            'user_id' => 'required', 
+            'gallery_id' => 'required'
+        ]);
+
+        $comment = Comment::create($request->all());        
+        return Comment::with('user')->findOrFail($comment->id);
+
+        // return Comment::makeComment($request);
     }
 
     /**
